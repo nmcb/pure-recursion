@@ -1,60 +1,34 @@
-import scala.util.{Try, Success, Failure}
-
 import org.scalatest.FunSpec
 import org.scalatest.Matchers._
 
 class RecursionSpec extends FunSpec {
   import recursion._
 
-  describe("odd(xs: Seq[T]): Boolean") {
-    it("should not blow up the stack") {
-      odd(1 to 1000000).result should be (false)
+  describe("odd/even[A](xs:Seq[A]): Boolean") {
+    it("is correct") {
+      odd(Seq.empty).result     should be (false)
+      odd(Seq(1)).result        should be (true)
+      odd(Seq(1, 2)).result     should be (false)
+      odd(Seq(1, 2, 3)).result  should be (true)
+
+      even(Seq.empty).result    should be (true)
+      even(Seq(1)).result       should be (false)
+      even(Seq(1, 2)).result    should be (true)
+      even(Seq(1, 2, 3)).result should be (false)
+    }
+    it("is pure, i.e. doesn't blow up the stack as a side efect") {
+      odd(1 to 1000000).result  should be (false)
+      even(1 to 1000000).result should be (true)
     }
   }
   describe("ackermann(m: Int, n: Int): Int") {
-    it("ackermann(3, 4): 125") {
-      ackermann(3, 4).result should be (125)
+    it("is correct") {
+      ackermann(0,0).result should be (1)
+      ackermann(1,4).result should be (6)
+      ackermann(3,3).result should be (61)
     }
-    it("should not blow up the stack") {
-      ackermann(3,12).result should be (32765)
+    it("is pure, i.e. doesn't blow up the stack as a side efect") {
+      ackermann(3, 12).result should be (32765)
     }
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// describe("odd(xs: Seq[T]): Boolean") {
-//   it("should not blow up the stack") {
-//     odd(1 to 1000000) should be (false)
-//   }
-// }
-//
-// describe("ackermann(m: Int, n: Int): Int") {
-//   it("should not blow up the stack") {
-//     ackermann(3,12).result should be (32765)
-//   }
-// }
