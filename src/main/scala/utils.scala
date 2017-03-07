@@ -17,7 +17,7 @@ object utils {
       this match {
         case Done(a)       => Call(() => f(a))
         case c: Call[A]    => Cont(c, f)
-        case c: Cont[a1,_] => Cont(c.p, (a: a1) => c.c(a).flatMap(f))
+        case c: Cont[a1,_] => Cont(c.p, (a: a1) => c.f(a).flatMap(f))
       }
 
     // fmap :: (a -> b) -> (p a -> p b)
@@ -26,7 +26,7 @@ object utils {
   }
   private case class Done[A](a: A)                          extends Pure[A]
   private case class Call[A](t: () => Pure[A])              extends Pure[A]
-  private case class Cont[A,B](p: Pure[A], c: A => Pure[B]) extends Pure[B]
+  private case class Cont[A,B](p: Pure[A], f: A => Pure[B]) extends Pure[B]
 
   def done[A](a: A): Pure[A] =
     Done(a)

@@ -1,4 +1,4 @@
-val ProjectName      = "functional-tailsafe"
+val ProjectName      = "pure-recursion"
 val OrganisationName = "splatter"
 val ProjectVersion   = "0.0.1"
 
@@ -10,7 +10,7 @@ def common: Seq[Setting[_]] = Seq(
   , scalaVersion := ScalaVersion
 )
 
-lazy val recursion: Project = (project in file("."))
+lazy val pureRecursion: Project = (project in file("."))
   .settings( common: _* )
   .settings(
     name := ProjectName,
