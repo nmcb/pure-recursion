@@ -14,6 +14,7 @@ object utils {
       }
     }
 
+    // fmap :: (a -> b) -> (p a -> p b)
     def map[B](f: A => B): Pure[B] =
       flatMap(a => Done(f(a)))
 
