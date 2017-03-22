@@ -10,7 +10,7 @@ def common: Seq[Setting[_]] = Seq(
   , scalaVersion := ScalaVersion
 )
 
-lazy val pureRecursion: Project = (project in file("."))
+lazy val recursion: Project = (project in file("."))
   .settings( common: _* )
   .settings(
     name := ProjectName,
