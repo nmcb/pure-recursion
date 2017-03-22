@@ -20,8 +20,8 @@ object utils {
 
     // (>>=) :: p a -> (a -> p b) -> p b
     def flatMap[B](f: A => Pure[B]): Pure[B] = this match {
-      case Done(a)          => Call(() => f(a))
-      case c: Call[A]       => Cont(c, f)
+      case Done(a)       => Call(() => f(a))
+      case c: Call[A]    => Cont(c, f)
       case c: Cont[a1,_] => Cont(c.p, (a: a1) => c.c(a).flatMap(f))
     }
   }
