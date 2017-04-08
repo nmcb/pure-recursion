@@ -21,12 +21,8 @@ class RecusionSpecification extends FunSpec {
       even(Seq(1,2,3)).result should be (false)
     }
     it("will not have side effects, as in blow up the stack") {
-      try {
-        odd(1 until 1000000).result  should be (true)
-        even(1 to 1000000).result    should be (true)
-      } catch {
-        case t: Throwable => fail(t.getClass.getName)
-      }
+      odd(1 until 1000000).result  should be (true)
+      even(1 to 1000000).result    should be (true)
     }
   }
 
@@ -40,11 +36,7 @@ class RecusionSpecification extends FunSpec {
       ackermann(3,4).result should be (125)
     }
     it("will not have side effects, as in blow up the stack") {
-      try {
-        ackermann(4,1).result should be (65533)
-      } catch {
-        case t: Throwable => fail(t.getClass.getName)
-      }
+      ackermann(3,12).result should be (32765)
     }
   }
 }
