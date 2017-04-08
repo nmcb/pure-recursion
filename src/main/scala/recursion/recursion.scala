@@ -3,7 +3,7 @@ package recursion
 object client {
   import utils._
 
-  // represents a JVM SOE reason, recursively calling a multiple functions
+  // A JVM SOE reason, recursively calling a multiple functions
 
   def odd[A](xs: Seq[A]): Pure[Boolean] =
     if (xs.isEmpty) done(false) else call(even(xs.tail))
@@ -12,7 +12,7 @@ object client {
     if (xs.isEmpty) done(true) else call(odd(xs.tail))
 
 
-  // represents a JVM SOE reason, an inner recursive call
+  // AnotherJVM SOE reason, an inner recursive call
 
   def ackermann(m: Int, n: Int): Pure[Int] = (m,n) match {
     case (0,_)                   => done(n + 1)
