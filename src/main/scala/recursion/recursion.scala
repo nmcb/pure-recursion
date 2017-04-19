@@ -12,7 +12,7 @@ object client {
     if (xs.isEmpty) done(true) else call(odd(xs.tail))
 
 
-  // AnotherJVM SOE reason, an inner recursive call
+  // AnotherJVM SOE reason, a nested recursive call
 
   def ackermann(m: Int, n: Int): Pure[Int] = (m,n) match {
     case (0,_)                   => done(n + 1)
@@ -22,4 +22,12 @@ object client {
       outer <- call(ackermann(m - 1, inner))
     } yield outer
   }
+
+  def mccarthy91(n: Int): Pure[Int] =
+    if (n > 100)
+      done(n - 10)
+    else for {
+      inner <- call(mccarthy91(n + 11))
+      outer <- call(mccarthy91(inner))
+    } yield outer
 }

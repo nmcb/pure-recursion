@@ -32,11 +32,31 @@ class RecusionSpecification extends FunSpec {
       ackermann(1,1).result should be (3)
       ackermann(2,1).result should be (5)
       ackermann(1,2).result should be (4)
-
       ackermann(3,4).result should be (125)
     }
     it("will not have side effects, as in blow up the stack") {
       ackermann(3,12).result should be (32765)
+    }
+  }
+
+  describe("maccarthy91") {
+    it("will return right results for typical argument values") {
+      mccarthy91(1000).result should be (990)
+      mccarthy91(999).result  should be (989)
+
+
+      mccarthy91(100).result should be (91)
+      mccarthy91(99).result  should be (91)
+      mccarthy91(98).result  should be (91)
+      mccarthy91(97).result  should be (91)
+
+      mccarthy91(10).result  should be (91)
+      mccarthy91(2).result   should be (91)
+      mccarthy91(1).result   should be (91)
+      mccarthy91(0).result   should be (91)
+    }
+    it("will not have side effects, as in blow up the stack") {
+      mccarthy91(1000000).result should be (999990)
     }
   }
 }
