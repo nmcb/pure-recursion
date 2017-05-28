@@ -4,6 +4,11 @@ val ProjectVersion   = "0.0.1"
 
 val ScalaVersion     = "2.12.1"
 
+scalacOptions in ThisBuild ++= Seq(
+  "-unchecked",
+  "-deprecation"
+)
+
 def common: Seq[Setting[_]] = Seq(
     organization := OrganisationName
   , version      := ProjectVersion
