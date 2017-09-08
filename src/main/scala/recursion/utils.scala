@@ -31,4 +31,13 @@ object utils {
 
   def done[A](a: A): Pure[A]          = Done(a)
   def call[A](t: => Pure[A]): Pure[A] = Call(() => t)
+
+  object Pure {
+    implicit class DoneInt(i: Int) {
+      def done: Pure[Int] = Done(i)
+    }
+    implicit class PureCall[A](p: => Pure[A]) {
+      def call: Pure[A] = Call(() => p)
+    }
+  }
 }
