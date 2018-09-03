@@ -1,6 +1,7 @@
 package recursion
 
 object utils {
+  
   import scala.annotation.tailrec
 
   sealed trait Pure[A] {
@@ -35,6 +36,9 @@ object utils {
   object Pure {
     implicit class DoneInt(i: Int) {
       def done: Pure[Int] = Done(i)
+    }
+    implicit class DoneLong(l: Long) {
+      def done: Pure[Long] = Done(l)
     }
     implicit class PureCall[A](p: => Pure[A]) {
       def call: Pure[A] = Call(() => p)

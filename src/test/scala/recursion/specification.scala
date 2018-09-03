@@ -36,6 +36,7 @@ class RecusionSpecification extends FunSpec {
     }
     it("will not have side effects, as in blow up the stack") {
       // ackermann(3,12).result should be (32765)
+      // ackermann(4,1).result should be (65533)
     }
   }
 

@@ -1,5 +1,6 @@
 package  playground
 
+// has stateful methods.
 class Evil[A] {
   private val encapsulated = new java.util.ArrayList[A]
 
