@@ -4,30 +4,30 @@ object sessiontypes {
   import scala.language.implicitConversions
 
   type Receiver = String
-  type Address 	= String
-  type Content 	= String
+  type Address  = String
+  type Content  = String
 
   case class Parcel[+S <: State](content: Content, receiver: Receiver, address: Address)
 
   sealed trait State
-  case class Packaged	  (byWhom: 			String) extends State
-  case class Send       (whoAccepts:	String) extends State
-  case class Received	  (whoDelivers:	String) extends State
-  case class Delivered  (toWhom: 			String) extends State
-  case class Lost			  (witness:			String) extends State
-  case class Moving		  (tracking:		Long	) extends State
-  case class Destroyed  (when: 				Long	) extends State
+  case class Packaged   (byWhom:      String) extends State
+  case class Send       (whoAccepts:  String) extends State
+  case class Received   (whoDelivers: String) extends State
+  case class Delivered  (toWhom:      String) extends State
+  case class Lost       (witness:     String) extends State
+  case class Moving     (tracking:    Long  ) extends State
+  case class Destroyed  (when:        Long  ) extends State
 
   @annotation.implicitNotFound(msg = "state transition from ${A} to ${B} is not allowed")
   sealed abstract class ~>[-A,+B]
 
-  implicit case object GoToThePost 				extends ~>[Packaged,Send]
-  implicit case object AcceptFromSender 	extends ~>[Send,Moving]
-  implicit case object BringToTheAddress 	extends ~>[Moving,Received]
-  implicit case object GiveToReceiver 		extends ~>[Received,Delivered]
-  implicit case object HaveFun 						extends ~>[Moving,Destroyed]
-  implicit case object DrinkAlcohol 			extends ~>[Moving,Lost]
-  implicit case object StopDrinking 			extends ~>[Lost,Moving]
+  implicit case object GoToThePost        extends ~>[Packaged,Send]
+  implicit case object AcceptFromSender   extends ~>[Send,Moving]
+  implicit case object BringToTheAddress  extends ~>[Moving,Received]
+  implicit case object GiveToReceiver     extends ~>[Received,Delivered]
+  implicit case object HaveFun            extends ~>[Moving,Destroyed]
+  implicit case object DrinkAlcohol       extends ~>[Moving,Lost]
+  implicit case object StopDrinking       extends ~>[Lost,Moving]
 
   trait Session[S] {
     type Self = S
@@ -36,13 +36,16 @@ object sessiontypes {
     def run (self: Self, dual: Dual): Unit
   }
 
- def runSession[AS,D:Session[AS]#DualOf](session: AS, dual: D) =
+ def runSession[AS, D : Session[AS]#DualOf](session: AS, dual: D): Unit =
     implicitly[Session[AS]#DualOf[D]].run(session, dual)
 
   case class Stop(msg: String)
-
-  case class In [ R[S<:State],A<:State,B<:State,+C](recv: R[A] => (C,R[B]))(implicit stateTransition: ~>[A,B])
-  case class Out[+R[S<:State],A<:State,+C](data: R[A], cont: C)
+  case class In [ R[S <: State], A <: State, B <: State, +C](
+    recv: R[A] => (C,R[B])
+  )(
+    implicit stateTransition: ~>[A,B]
+  )
+  case class Out[+R[S <: State], A <: State, +C](data: R[A], cont: C)
 
   implicit object StopDual extends Session[Stop] {
     type Dual = Stop
