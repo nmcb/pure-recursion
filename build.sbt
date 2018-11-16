@@ -2,7 +2,7 @@ val ProjectName      = "pure-recursion"
 val OrganisationName = "splatter"
 val ProjectVersion   = "0.0.1"
 
-val ScalaVersion     = "2.12.1"
+val ScalaVersion     = "2.12.7"
 
 scalacOptions in ThisBuild ++= Seq(
   "-unchecked",
