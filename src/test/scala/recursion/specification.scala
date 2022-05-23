@@ -1,10 +1,13 @@
 package recursion
 
-import org.scalatest.FunSpec
-import org.scalatest.Assertion
-import org.scalatest.Matchers._
+import org.scalatest._
+import funspec._
+import matchers.should._
 
-class RecusionSpecification extends FunSpec {
+class RecusionSpecification
+  extends AnyFunSpec
+  with Matchers {
+    
   import client._
 
   describe("even/odd") {
@@ -36,7 +39,7 @@ class RecusionSpecification extends FunSpec {
     }
     it("will not have side effects, as in blow up the stack") {
       // ackermann(3,12).result should be (32765)
-      // ackermann(4,1).result should be (65533)
+      ackermann(4,1).result should be (65533)
     }
   }
 
