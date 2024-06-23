@@ -19,6 +19,6 @@ lazy val recursion: Project =
     .settings( common: _* )
     .settings( name := ProjectName
              , libraryDependencies ++= Seq(
-               "org.scalactic"  %% "scalactic"  % "3.2.18"  % "test"
+               "org.scalactic"  %% "scalactic"  % "3.2.19"  % "test"
              , "org.scalatest"  %% "scalatest"  % "3.2.18"  % "test"
              ))
