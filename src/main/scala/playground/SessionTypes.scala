@@ -1,6 +1,7 @@
-object sessiontypes {
+package playground
 
-  import scala.language.higherKinds
+object SessionTypes:
+
   import scala.language.implicitConversions
 
   type Receiver = String
@@ -29,14 +30,13 @@ object sessiontypes {
   implicit case object DrinkAlcohol       extends ~>[Moving,Lost]
   implicit case object StopDrinking       extends ~>[Lost,Moving]
 
-  trait Session[S] {
+  trait Session[S]:
     type Self = S
     type Dual
     type DualOf[D] = Session[Self] { type Dual = D }
     def run (self: Self, dual: Dual): Unit
-  }
 
- def runSession[AS, D : Session[AS]#DualOf](session: AS, dual: D): Unit =
+  def runSession[AS, D : Session[AS]#DualOf](session: AS, dual: D): Unit =
     implicitly[Session[AS]#DualOf[D]].run(session, dual)
 
   case class Stop(msg: String)
@@ -47,63 +47,57 @@ object sessiontypes {
   )
   case class Out[+R[S <: State], A <: State, +C](data: R[A], cont: C)
 
-  implicit object StopDual extends Session[Stop] {
+  implicit object StopDual extends Session[Stop]:
     type Dual = Stop
     def run (self: Self, dual: Dual): Unit = {}
-  }
 
-  implicit def InDual[R[S<:State],RA<:State,RB<:State,C](implicit cont: Session[C]) = new Session[In[R,RA,RB,C]] {
-    type Dual = Out[R,RA,cont.Dual]
-    def run(self: Self, dual: Dual) = cont.run(self.recv(dual.data)._1, dual.cont)
-  }
+  implicit def InDual[R[S<:State],RA<:State,RB<:State,C](implicit cont: Session[C]): Session[In[R, RA, RB, C]] {type Dual = Out[R, RA, cont.Dual]} =
+    new Session[In[R,RA,RB,C]]:
+      type Dual = Out[R,RA,cont.Dual]
+      def run(self: Self, dual: Dual): Unit = cont.run(self.recv(dual.data)._1, dual.cont)
 
-  implicit def OutDual[R[S<:State],RA<:State,RB<:State,C](implicit cont: Session[C]) = new Session[Out[R,RA,C]] {
-    type Dual = In[R,RA,RB,cont.Dual]
-    def run(self: Self, dual: Dual) = cont.run(self.cont, dual.recv(self.data)._1)
-  }
+  implicit def OutDual[R[S<:State],RA<:State,RB<:State,C](implicit cont: Session[C]): Session[Out[R, RA, C]] {type Dual = In[R, RA, RB, cont.Dual]} =
+    new Session[Out[R,RA,C]]:
+      type Dual = In[R,RA,RB,cont.Dual]
+      def run(self: Self, dual: Dual): Unit = cont.run(self.cont, dual.recv(self.data)._1)
 
+  private def trivialServer = Stop("Done")
+  private def trivialClient = Stop("Me too")
+  def trivial(): Unit = runSession(trivialServer, trivialClient)
 
-
-  def trivialServer = Stop("Done")
-  def trivialClient = Stop("Me too")
-  def trivial = runSession(trivialServer, trivialClient)
-
-  def server =
-    In { p: Parcel[Packaged] =>
+  private def server =
+    In: (p: Parcel[Packaged]) =>
       val content = "Changed by server " + p.content
       val result = Parcel[Send](content, p.receiver, p.address)
-        val stop = Stop("With server result: " + result)
-        (stop, result)
-      }
+      val stop = Stop("With server result: " + result)
+      (stop, result)
 
-  def client = {
+  private def client =
     val parcel = Parcel[Packaged]("Content", "Receiver", "Address")
     val finish = Stop("With client result: " + parcel)
     Out(parcel, finish)
-  }
 
-  def doServer =
-    In { p: Parcel[Packaged] =>
+  def doServer() =
+    In: (p: Parcel[Packaged]) =>
       val result = Parcel[Send]("Changed by server " + p.content, p.receiver, p.address)
-      (In { r: Parcel[Packaged] =>
-        println("Server result: " + result)
-        val stop = Stop("With server result: " + result)
-        val wrongOut = Out(result, stop)
-        (stop, result)
-      }, result)
-    }
+      (
+        In: (r: Parcel[Packaged]) =>
+          println("Server result: " + result)
+          val stop = Stop("With server result: " + result)
+          val wrongOut = Out(result, stop)
+          (stop, result)
+        ,
+          result
+      )
 
-  def doClient = {
+  private def doClient() =
     val first = Parcel[Packaged]("First", "Receiver", "Address")
     val second = Parcel[Packaged]("Second", "Receiver", "Address")
-    def finish = {
+    def finish =
       println("Client results: " + first + " and " + second)
       Stop("With client result: " + first)
-    }
     Out(first, Out(second, finish))
-  }
 
-  def run = runSession(server, client)
+  def run(): Unit = runSession(server, client)
 
-  def doRun = runSession(doServer, doClient)
-}
+  def doRun(): Unit = runSession(doServer(), doClient())
