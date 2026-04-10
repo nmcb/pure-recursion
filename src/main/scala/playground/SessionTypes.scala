@@ -40,11 +40,7 @@ object SessionTypes:
     implicitly[Session[AS]#DualOf[D]].run(session, dual)
 
   case class Stop(msg: String)
-  case class In [ R[S <: State], A <: State, B <: State, +C](
-    recv: R[A] => (C,R[B])
-  )(
-    implicit stateTransition: ~>[A,B]
-  )
+  case class In [ R[S <: State], A <: State, B <: State, +C](recv: R[A] => (C,R[B]))(using stateTransition: ~>[A,B])
   case class Out[+R[S <: State], A <: State, +C](data: R[A], cont: C)
 
   implicit object StopDual extends Session[Stop]:

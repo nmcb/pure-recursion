@@ -3,8 +3,13 @@ val OrganisationName = "nmcb"
 val ProjectVersion   = "0.1.0"
 val ScalaVersion     = "3.8.3"
 
-scalacOptions in ThisBuild ++= Seq(
+ThisBuild / scalacOptions ++= Seq(
+  "-encoding", "utf8",
+  "-feature",
+  "-language:implicitConversions",
+  "-language:existentials",
   "-unchecked",
+  "-Werror",
   "-deprecation"
 )
 

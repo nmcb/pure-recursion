@@ -8,7 +8,7 @@ class RecusionSpecification
   extends AnyFunSpec
   with Matchers {
     
-  import client._
+  import Client._
 
   describe("even/odd") {
     it("will return whether the passed seq is of even or odd length") {
