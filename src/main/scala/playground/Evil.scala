@@ -10,13 +10,13 @@ class Evil[A] {
   }
 
   def addAll(as: List[A]): Unit = {
-    as.foreach(encapsulated.add(_))
+    as.foreach(encapsulated.add)
     // as.foreach(add(_))
     ()
   }
 
   def elements(): List[A] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.*
     encapsulated.asScala.toList
   }
 }
